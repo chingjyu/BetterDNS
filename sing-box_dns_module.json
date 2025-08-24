@@ -1,0 +1,121 @@
+...
+    "dns": {
+        "servers": [
+            {"tag": "domestic", "type": "https", "server": "223.5.5.5"},
+            {"tag": "overseas", "type": "https", "server": "1.1.1.1"}
+        ],
+        "rules": [
+            {"query_type": "HTTPS", "action": "reject"},
+            {"clash_mode": "direct", "server": "domestic"},
+            {"clash_mode": "global", "server": "overseas"},
+            {"rule_set": "geosite-category-ads-all", "action": "reject"},
+            {"rule_set": ["geosite-google", "geosite-geolocation-!cn", "geosite-category-ai!cn"], "action": "route", "server": "overseas"},
+            {"rule_set": ["geosite-games@cn", "geosite-tld-cn", "geosite-cn"], "action": "route", "server": "domestic"}
+        ],
+        "final": "overseas",
+        "strategy": "ipv4_only",
+        "independent_cache": true,
+        "fakeip": {
+            "enabled": false
+        }
+    },
+...
+    "route": {
+        "auto_detect_interface": true,
+        "default_domain_resolver": {
+          "server": "domestic"
+        },
+        "final": "select",
+        "rules": [
+            {"action": "sniff"},
+            {"protocol": "dns", "action": "hijack-dns"},
+            {"action": "reject", "rule_set": "geosite-category-ads-all"},
+            {"clash_mode": "direct", "outbound": "direct", "action": "route"},
+            {"ip_is_private": true, "outbound": "direct"},
+            {"outbound": "direct", "clash_mode": "direct"},
+            {"outbound": "select", "clash_mode": "global"},
+            {"outbound": "select", "rule_set": ["geosite-google", "geoip-google"], "action": "route"},
+            {"outbound": "direct", "rule_set": ["geosite-apple@cn", "geosite-games@cn", "geosite-tld-cn", "geosite-cn","geoip-cn", "geosite-tencent"], "action": "route"},
+            {"outbound": "select", "rule_set": ["geosite-geolocation-!cn", "geosite-category-ai!cn"], "action": "route"}
+        ],
+        "rule_set": [
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-cn",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-cn.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geoip-cn",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geoip/raw/refs/heads/rule-set/geoip-cn.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-geolocation-!cn",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-geolocation-!cn.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-category-ads-all",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-category-ads-all.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-tencent",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-tencent.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-google",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-google.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geoip-google",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geoip/raw/refs/heads/rule-set/geoip-google.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-apple@cn",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-apple@cn.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-tld-cn",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-tld-cn.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-category-ai!cn",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-category-ai-!cn.srs"
+            },
+            {
+                "download_detour": "select",
+                "format": "binary",
+                "tag": "geosite-games@cn",
+                "type": "remote",
+                "url": "https://github.com/1715173329/sing-geosite/raw/refs/heads/rule-set/geosite-category-games@cn.srs"
+            }
+        ]
+    },
+...
